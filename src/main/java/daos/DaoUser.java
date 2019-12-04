@@ -67,12 +67,34 @@ public class DaoUser extends Dao <DtoUser>  {
         return null;
     }
 
-    public DtoUser create(DtoUser dto) {
+    public DtoUser create(DtoUser dtouser) {
+        try{
+
+            PreparedStatement selQuery = conn1.prepareStatement("Insert into Users values (first_name=?,last_name=?,address=?,city=?)");
+            selQuery.setString(1,dtouser.getFirstName());
+            selQuery.setString(2,dtouser.getLastName());
+            selQuery.setString(3,dtouser.getAddress());
+            selQuery.setString(4,dtouser.getCity());
+            int i = selQuery.executeUpdate();
+            if (i == 1) {
+                return dtouser;
+            }
+        }
+        catch(SQLException ex){
+            ex.printStackTrace();
+        }
         return null;
     }
 
     public void delete(int id) {
+        try{
 
+            Statement stmt = conn1.createStatement();
+            stmt.executeUpdate("DELETE FROM Users WHERE user_id=" + id);
+        }
+        catch(SQLException ex){
+            ex.printStackTrace();
+        }
     }
 
     public DtoUser extractUserFromResultSet(ResultSet resultSet) {
