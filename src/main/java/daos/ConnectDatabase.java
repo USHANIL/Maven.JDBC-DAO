@@ -16,7 +16,8 @@ public class ConnectDatabase {
     {
         try {
            // DriverManager.registerDriver(new Driver());
-            return DriverManager.getConnection(URL, USER, PASS);
+            Connection conn = DriverManager.getConnection(URL, USER, PASS);
+            return conn;
         } catch (SQLException ex) {
             throw new RuntimeException("Error connecting to the database", ex);
         }

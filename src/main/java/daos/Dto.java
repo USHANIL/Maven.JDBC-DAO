@@ -1,5 +1,5 @@
 package daos;
 
-public interface Dto {
-    int getId();
+public abstract class Dto {
+    abstract int getId();
 }
