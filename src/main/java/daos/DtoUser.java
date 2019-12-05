@@ -17,7 +17,11 @@ public class DtoUser extends Dto {
     }
 
     public DtoUser(){
-
+        this.id = 0;
+        this.firstName = "";
+        this.lastName = "";
+        this.address = "";
+        this.city = "";
     }
 
     public void setId(Integer id) {
@@ -58,5 +62,9 @@ public class DtoUser extends Dto {
 
     public int getId() {
         return id;
+    }
+
+    public String toString(){
+        return String.format("User={user id = %d, First Name = %s, Last Name = %s, Address = %s, City = %s}",getId(),getFirstName(),getLastName(),getAddress(),getCity());
     }
 }

@@ -33,12 +33,12 @@ public class DaoUser extends Dao <DtoUser>  {
         DtoUser user;
         List users = new LinkedList();
         Statement selQuery = conn1.createStatement();
-        ResultSet rs = selQuery.executeQuery("Select user_id,first_name,last_name,address,city from Users where user_id=");
+        ResultSet rs = selQuery.executeQuery("Select user_id,first_name,last_name,address,city from Users");
         while (rs.next()) {
             user = extractUserFromResultSet(rs);
             users.add(user);
-            return users;
         }
+            return users;
     }
         catch(SQLException ex){
             ex.printStackTrace();
@@ -50,11 +50,12 @@ public class DaoUser extends Dao <DtoUser>  {
     public DtoUser update(DtoUser dtouser) {
         try{
 
-            PreparedStatement selQuery = conn1.prepareStatement("update first_name=?,last_name=?,address=?,city=? from Users where user_id=?");
+            /*PreparedStatement selQuery = conn1.prepareStatement("update first_name=?,last_name=?,address=?,city=? from Users where user_id=?");
             selQuery.setString(1,dtouser.getFirstName());
             selQuery.setString(2,dtouser.getLastName());
             selQuery.setString(3,dtouser.getAddress());
-            selQuery.setString(4,dtouser.getCity());
+            selQuery.setString(4,dtouser.getCity()); */
+            PreparedStatement selQuery = prepStatement(dtouser);
             selQuery.setInt(5,dtouser.getId());
             int i = selQuery.executeUpdate();
             if (i == 1) {
@@ -70,15 +71,37 @@ public class DaoUser extends Dao <DtoUser>  {
     public DtoUser create(DtoUser dtouser) {
         try{
 
-            PreparedStatement selQuery = conn1.prepareStatement("Insert into Users values (first_name=?,last_name=?,address=?,city=?)");
+           /* PreparedStatement selQuery = conn1.prepareStatement("Insert into Users values (first_name=?,last_name=?,address=?,city=?)");
             selQuery.setString(1,dtouser.getFirstName());
             selQuery.setString(2,dtouser.getLastName());
             selQuery.setString(3,dtouser.getAddress());
-            selQuery.setString(4,dtouser.getCity());
+            selQuery.setString(4,dtouser.getCity()); */
+           PreparedStatement selQuery = prepStatement(dtouser);
             int i = selQuery.executeUpdate();
             if (i == 1) {
                 return dtouser;
             }
+        }
+        catch(SQLException ex){
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    public PreparedStatement prepStatement(DtoUser dtouser){
+        try {
+            PreparedStatement selQuery;
+            if (dtouser.getId() == 0){
+                 selQuery = conn1.prepareStatement("Insert into Users values (null,first_name=?,last_name=?,address=?,city=?)");
+            }
+            else {
+                selQuery = conn1.prepareStatement("update Users set first_name=?,last_name=?,address=?,city=? where user_id=?");
+            }
+            selQuery.setString(1,dtouser.getFirstName());
+            selQuery.setString(2,dtouser.getLastName());
+            selQuery.setString(3,dtouser.getAddress());
+            selQuery.setString(4,dtouser.getCity());
+            return selQuery;
         }
         catch(SQLException ex){
             ex.printStackTrace();
